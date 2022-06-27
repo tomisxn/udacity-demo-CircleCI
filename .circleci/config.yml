@@ -24,6 +24,11 @@ jobs:
       - run:
           name: "Print world"
           command: "echo world"
+  print_var:
+    docker:
+      - image: cimg/node:13.8.0
+    steps:
+      - run: echo $MY_NAME
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
