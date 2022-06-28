@@ -6,6 +6,7 @@ version: 2.1
 orbs:
   # Declare a dependency on the welcome-orb
   welcome: circleci/welcome-orb@0.4.1
+  working_directory: /tmp
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -29,6 +30,23 @@ jobs:
       - image: cimg/node:13.8.0
     steps:
       - run: echo $MY_NAME
+  save_hello_world_output:
+    docker:
+      - image: cimg/node:13.8.0
+    steps:
+      - run: mkdir -p workspace
+      - run: echo "Hello, world!" > workspace/output.txt
+    - persist_to_workspace:
+      root: workspace
+      paths:
+        - output.txt
+  print_output_file:
+    docker:
+      - image: cimg/node:13.8.0
+    steps:
+      - attach_workspace:
+        at: /tmp/workspace
+      - run: cat /tmp/workspace/output.txt
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -43,3 +61,7 @@ workflows:
           requires:
             - print_hello
       - print_var
+      - save_hello_world_output
+      - print_output_file:
+          requires:
+            - save_hello_world_output
