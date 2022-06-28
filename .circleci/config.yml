@@ -35,18 +35,18 @@ jobs:
       - image: cimg/node:13.8.0
     steps:
       - run: mkdir -p workspace
-      - run: echo "Hello, world!" > workspace/output.txt
+      - run: echo "Hello, world!" > workspace/echo-output
       - persist_to_workspace:
         root: workspace
         paths:
-          - output.txt
+          - echo-output
   print_output_file:
     docker:
       - image: cimg/node:13.8.0
     steps:
       - attach_workspace:
         at: /tmp/workspace
-      - run: cat /tmp/workspace/output.txt
+      - run: cat /tmp/workspace/echo-output/output.txt
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
